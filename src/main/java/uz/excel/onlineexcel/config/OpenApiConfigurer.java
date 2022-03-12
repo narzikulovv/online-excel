@@ -1,4 +1,3 @@
-/*
 package uz.excel.onlineexcel.config;
 
 
@@ -11,7 +10,8 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uz.mutalov.travellog.properties.OpenApiProperties;
+import uz.excel.onlineexcel.properties.OpenApiProperties;
+import uz.excel.onlineexcel.properties.OpenApiProperties;
 
 import java.util.List;
 
@@ -68,4 +68,4 @@ public class OpenApiConfigurer {
         securityScheme.scheme(SCHEME);
         return securityScheme;
     }
-}*/
+}

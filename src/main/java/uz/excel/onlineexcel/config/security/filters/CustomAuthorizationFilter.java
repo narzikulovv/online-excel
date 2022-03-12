@@ -10,7 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import uz.mutalov.travellog.config.security.JwtUtils;
+import uz.excel.onlineexcel.config.security.JwtUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

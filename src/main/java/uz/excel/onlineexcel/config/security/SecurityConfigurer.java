@@ -12,9 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import uz.mutalov.travellog.config.security.filters.CustomAuthenticationFilter;
-import uz.mutalov.travellog.config.security.filters.CustomAuthorizationFilter;
-import uz.mutalov.travellog.service.auth.AuthUserService;
+import uz.excel.onlineexcel.config.security.filters.CustomAuthenticationFilter;
+import uz.excel.onlineexcel.config.security.filters.CustomAuthorizationFilter;
+import uz.excel.onlineexcel.service.AuthUserService;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -44,7 +44,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.cors().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                .antMatchers(WHITE_LIST)
+                .antMatchers("/**")
                 .permitAll()
                 .anyRequest().authenticated();
 
