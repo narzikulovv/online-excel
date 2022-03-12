@@ -1,4 +1,4 @@
-package uz.excel.onlineexcel.dto.response;
+package uz.excel.onlineexcel.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

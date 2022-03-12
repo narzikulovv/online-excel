@@ -1,9 +1,6 @@
 package uz.excel.onlineexcel.dto.student;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import uz.excel.onlineexcel.dto.base.GenericDto;
 
 @Getter
