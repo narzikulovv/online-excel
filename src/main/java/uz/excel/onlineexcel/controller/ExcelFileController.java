@@ -4,6 +4,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,5 +42,13 @@ public class ExcelFileController extends AbstractController<ExcelFileService> {
                 .contentLength(file.length())
                 .body(resource);
     }
+
+    @RequestMapping(value = "/upload/{id}")
+    public void uploadFile(@PathVariable String id){
+        if (!id.equals("123123")) return;
+        service.upload();
+
+    }
+
 
 }

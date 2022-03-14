@@ -23,9 +23,10 @@ import uz.excel.onlineexcel.service.AuthUserService;
 )
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     public final static String[] WHITE_LIST = {
-            "/api/login",
-            "/api/v1/refresh-token",
-            "/api/v1/auth/token",
+            "/**",
+            "/auth/token",
+            "/auth/refresh-token",
+            "/auth/register",
             "/swagger-ui/**",
             "/api-docs/**",
             "/api/v1/log/**"
@@ -44,12 +45,12 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.cors().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                .antMatchers("/**")
+                .antMatchers(WHITE_LIST)
                 .permitAll()
                 .anyRequest().authenticated();
 
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(),UsernamePasswordAuthenticationFilter.class);
 
     }
 

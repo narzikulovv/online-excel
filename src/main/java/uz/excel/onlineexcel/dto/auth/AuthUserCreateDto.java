@@ -19,5 +19,5 @@ public class AuthUserCreateDto implements BaseDto {
 
     private String phone;
 
-    private String picture;
+    private String picture; //what the hack
 }

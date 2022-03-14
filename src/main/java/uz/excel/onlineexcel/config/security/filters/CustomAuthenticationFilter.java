@@ -13,7 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import uz.excel.onlineexcel.config.security.JwtUtils;
+import uz.excel.onlineexcel.config.security.utils.JwtUtils;
 import uz.excel.onlineexcel.dto.auth.AuthUserDto;
 import uz.excel.onlineexcel.dto.auth.SessionDto;
 import uz.excel.onlineexcel.response.AppErrorDto;
@@ -33,16 +33,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-        super.setFilterProcessesUrl("/api/login");
+        super.setFilterProcessesUrl("/auth/token");
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
             AuthUserDto loginDto = new ObjectMapper().readValue(request.getReader(), AuthUserDto.class);
-            log.info("Username is: {}", loginDto.getUserName());
+            log.info("Username is: {}", loginDto.getUsername());
             UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(loginDto.getUserName(), loginDto.getPassword());
+                    new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
             return authenticationManager.authenticate(authenticationToken);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
@@ -84,7 +84,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         DataDto<AppErrorDto> resp = new DataDto<>(
-                AppErrorDto.builder()
+                AppErrorDto.secondBuilder()
                         .message(failed.getMessage())
 //                        .path(request.getRequestURL().toString())
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)
