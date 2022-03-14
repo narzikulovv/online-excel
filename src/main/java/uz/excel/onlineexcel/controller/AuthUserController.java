@@ -9,7 +9,7 @@ import uz.excel.onlineexcel.controller.base.AbstractController;
 import uz.excel.onlineexcel.dto.auth.AuthUserCreateDto;
 import uz.excel.onlineexcel.dto.auth.AuthUserDto;
 import uz.excel.onlineexcel.dto.auth.SessionDto;
-import uz.excel.onlineexcel.dto.response.DataDto;
+import uz.excel.onlineexcel.response.DataDto;
 import uz.excel.onlineexcel.service.AuthUserService;
 
 import javax.servlet.http.HttpServletRequest;
