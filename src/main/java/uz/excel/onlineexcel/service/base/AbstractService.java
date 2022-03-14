@@ -1,5 +1,6 @@
 package uz.excel.onlineexcel.service.base;
 
+import uz.excel.onlineexcel.dto.student.StudentCreateDto;
 import uz.excel.onlineexcel.mapper.base.Mapper;
 import uz.excel.onlineexcel.repository.BaseRepository;
 
@@ -17,5 +18,4 @@ public abstract class AbstractService<M extends Mapper, R extends BaseRepository
         this.mapper = mapper;
         this.repository = repository;
     }
-
 }

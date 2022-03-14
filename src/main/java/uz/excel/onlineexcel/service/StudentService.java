@@ -1,7 +1,10 @@
 package uz.excel.onlineexcel.service;
 
 import org.springframework.stereotype.Service;
+import uz.excel.onlineexcel.dto.student.StudentCreateDto;
 import uz.excel.onlineexcel.dto.student.StudentDto;
+import uz.excel.onlineexcel.dto.student.StudentUpdateDto;
+import uz.excel.onlineexcel.entity.Student;
 import uz.excel.onlineexcel.mapper.StudentMapper;
 import uz.excel.onlineexcel.repository.StudentRepository;
 import uz.excel.onlineexcel.service.base.AbstractService;
@@ -9,6 +12,8 @@ import uz.excel.onlineexcel.service.base.BaseService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 @Service
 public class StudentService extends AbstractService<StudentMapper, StudentRepository> implements BaseService {
@@ -40,4 +45,36 @@ public class StudentService extends AbstractService<StudentMapper, StudentReposi
         return list;
 
     }
+
+    public StudentDto get(Long id) {
+
+        Optional<Student> student = repository.findById(id);
+
+        return mapper.toDto(student.get());
+    }
+
+    public Long create(StudentCreateDto dto) {
+
+        Student student = mapper.fromCreateDto(dto);
+
+        return repository.save(student).getId();
+
+    }
+
+    public void update(StudentUpdateDto dto) {
+
+        Optional<Student> studentOptional = repository.findById(dto.getId());
+        Student student = studentOptional.get();
+
+        student = mapper.fromUpdateDto(dto, student);
+
+        repository.save(student);
+    }
+
+    public void delete(Long id) {
+
+        repository.deleteById(id);
+
+    }
+
 }

@@ -2,6 +2,7 @@ package uz.excel.onlineexcel.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import uz.excel.onlineexcel.entity.base.Auditable;
 
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 @Setter
 @Entity
 @Table(schema = "auth")
+@ToString
 public class Student extends Auditable {
 
     @Column
