@@ -1,9 +1,16 @@
 package uz.excel.onlineexcel.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uz.excel.onlineexcel.controller.base.AbstractController;
+import uz.excel.onlineexcel.dto.FilterDto;
+import uz.excel.onlineexcel.dto.student.StudentCreateDto;
+import uz.excel.onlineexcel.dto.student.StudentDto;
+import uz.excel.onlineexcel.dto.student.StudentUpdateDto;
+import uz.excel.onlineexcel.response.DataDto;
+import uz.excel.onlineexcel.response.ResponseEntity;
 import uz.excel.onlineexcel.service.StudentService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/student/")
