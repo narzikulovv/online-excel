@@ -1,11 +1,11 @@
 package uz.excel.onlineexcel.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.xssf.usermodel.*;
 import org.springframework.stereotype.Service;
 import uz.excel.onlineexcel.dto.student.StudentDto;
 import uz.excel.onlineexcel.entity.Student;
@@ -17,7 +17,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -117,57 +116,81 @@ public class ExcelFileService implements BaseService {
         try {
             List<Student> students = new ArrayList<>();
             FileInputStream fileInputStream = new FileInputStream(file);
-
+            //workbook created
             XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
 
-            int activeSheetIndex = workbook.getActiveSheetIndex();
-            XSSFSheet sheetAt = workbook.getSheetAt(activeSheetIndex);
+            //total number of sheets
+            int numberOfSheets = workbook.getNumberOfSheets();
 
-            int lastRowNum = sheetAt.getLastRowNum();
-            for (int i = 1; i < lastRowNum; i++) {
-                XSSFRow row = sheetAt.getRow(i);
-                String universityName = row.getCell(1).getStringCellValue();
-                String fullName = row.getCell(2).getStringCellValue();
-                String entranceYear = String.valueOf(row.getCell(3).getNumericCellValue());
-                String graduationYear = String.valueOf(row.getCell(4).getStringCellValue());
-                String faculty = row.getCell(5).getStringCellValue();
-                String speciality = row.getCell(6).getStringCellValue();
-                String studyType = row.getCell(7).getStringCellValue();
-                String academicType = row.getCell(8).getStringCellValue();
-                String diplomaSerial = String.valueOf(row.getCell(9).getStringCellValue());
-                String diplomaRegistrationNumber = row.getCell(10).getStringCellValue();
-                String givenDate = row.getCell(11).getStringCellValue();
-                String academicLevel = row.getCell(12).getStringCellValue();
-                String appendixNumber = row.getCell(13).getStringCellValue();
+            for (int sheetIndex = 0; sheetIndex < numberOfSheets; sheetIndex++) {
+                //sheet at current index
+                XSSFSheet sheetAt = workbook.getSheetAt(sheetIndex);
 
-                Student student = Student.builder()
-                        .universityName(universityName)
-                        .fullName(fullName)
-                        .entranceYear(entranceYear)
-                        .graduationYear(graduationYear)
-                        .faculty(faculty)
-                        .speciality(speciality)
-                        .studyType(studyType)
-                        .academicType(academicType)
-                        .diplomaSerial(diplomaSerial)
-                        .diplomaRegistrationNumber(diplomaRegistrationNumber)
-                        .givenDate(givenDate)
-                        .academicLevel(academicLevel)
-                        .appendixNumber(appendixNumber)
-                        .organizationId(1L)
-                        .build();
+                //total count of rows in current sheet
+                int lastRowNum = sheetAt.getLastRowNum();
 
-                System.out.println(student.toString());
-                students.add(student);
-            }
+                for (int rowIndex = 1; rowIndex <= lastRowNum; rowIndex++) {
+                    //row at current index of current sheet
+                    XSSFRow row = sheetAt.getRow(rowIndex);
+
+                    String universityName = getValueFromCell(row, 1);
+                    String fullName = getValueFromCell(row, 2);
+                    String entranceYear = getValueFromCell(row, 3);
+                    String graduationYear = getValueFromCell(row, 4);
+                    String faculty = getValueFromCell(row, 5);
+                    String speciality = getValueFromCell(row, 6);
+                    String studyType = getValueFromCell(row, 7);
+                    String academicType = getValueFromCell(row, 8);
+                    String diplomaSerial = getValueFromCell(row, 9);
+                    String diplomaRegistrationNumber = getValueFromCell(row, 10);
+                    String givenDate = getValueFromCell(row, 11);
+                    String academicLevel = getValueFromCell(row, 12);
+                    String appendixNumber = getValueFromCell(row, 13);
+
+                    Student student = Student.builder()
+                            .universityName(universityName)
+                            .fullName(fullName)
+                            .entranceYear(entranceYear)
+                            .graduationYear(graduationYear)
+                            .faculty(faculty)
+                            .speciality(speciality)
+                            .studyType(studyType)
+                            .academicType(academicType)
+                            .diplomaSerial(diplomaSerial)
+                            .diplomaRegistrationNumber(diplomaRegistrationNumber)
+                            .givenDate(givenDate)
+                            .academicLevel(academicLevel)
+                            .appendixNumber(appendixNumber)
+                            .organizationId(1L)
+                            .build();
+
+                    students.add(student);
+                } //rows
+            } //sheets
             repository.saveAll(students);
-
-        } catch (FileNotFoundException ignored) {
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    private String getValueFromCell(XSSFRow row, int cellIndex) {
+
+        XSSFCell cell = row.getCell(cellIndex);
+
+        CellType cellType = cell.getCellType();
+
+        if (cellType.equals(CellType.STRING)) {
+            return cell.getStringCellValue();
+        } else if (cellType.equals(CellType.NUMERIC)) {
+            return String.valueOf(cell.getNumericCellValue());
+        } else if (cellType.equals(CellType.BOOLEAN)) {
+            return String.valueOf(cell.getBooleanCellValue());
+        } else if (cellType.equals(CellType.FORMULA)) {
+            return cell.getCellFormula();
+        } else if (cellType.equals(CellType.ERROR)) {
+            return cell.getErrorCellString();
+        } else {
+            return String.valueOf(cell.getDateCellValue());
+        }
     }
 }
