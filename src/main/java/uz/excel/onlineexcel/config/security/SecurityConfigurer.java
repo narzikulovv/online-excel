@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,12 +16,20 @@ import uz.excel.onlineexcel.config.security.filters.CustomAuthenticationFilter;
 import uz.excel.onlineexcel.config.security.filters.CustomAuthorizationFilter;
 import uz.excel.onlineexcel.service.AuthUserService;
 
-import static uz.excel.onlineexcel.config.security.utils.SecurityUtils.WHITE_LIST;
-
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableGlobalMethodSecurity(
+        prePostEnabled = true
+)
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
-
+    public final static String[] WHITE_LIST = {
+            "/api/login",
+            "/api/v1/refresh-token",
+            "/api/v1/auth/token",
+            "/swagger-ui/**",
+            "/api-docs/**",
+            "/api/v1/log/**"
+    };
     private final AuthUserService userService;
     private final PasswordEncoder passwordEncoder;
 
@@ -35,12 +44,13 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.cors().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-                .antMatchers(WHITE_LIST)
+                .antMatchers("/**")
                 .permitAll()
                 .anyRequest().authenticated();
 
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+
     }
 
     @Bean
