@@ -9,7 +9,6 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,6 +25,7 @@ import uz.excel.onlineexcel.property.ServerProperties;
 import uz.excel.onlineexcel.repository.AuthUserRepository;
 import uz.excel.onlineexcel.response.AppErrorDto;
 import uz.excel.onlineexcel.response.DataDto;
+import uz.excel.onlineexcel.response.ResponseEntity;
 import uz.excel.onlineexcel.service.base.AbstractService;
 import uz.excel.onlineexcel.service.base.BaseService;
 
@@ -33,6 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AuthUserService extends AbstractService<AuthUserMapper, AuthUserRepository>
@@ -102,7 +104,7 @@ public class AuthUserService extends AbstractService<AuthUserMapper, AuthUserRep
         try {
             AuthUser authUser = mapper.fromCreateDto(dto);
             authUser.setRole(AuthRole.EMPLOYEE);
-//            authUser.setPicture(dto.getPicture().getBytes());
+            authUser.setPicture(dto.getPicture().getBytes());
             authUser.setPassword(passwordEncoder.encode(dto.getPassword()));
             repository.save(authUser);
         } catch (Exception e) {
@@ -113,5 +115,30 @@ public class AuthUserService extends AbstractService<AuthUserMapper, AuthUserRep
                     .build()), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(new DataDto<>(true), HttpStatus.OK);
+    }
+
+    public ResponseEntity<DataDto<Void>> delete(Long id) {
+        repository.deleteById(id);
+        return new ResponseEntity<>(new DataDto<>(),HttpStatus.OK);
+    }
+
+    public ResponseEntity<DataDto<AuthUserDto>>  get(Long id) {
+       Optional<AuthUser> authUser = repository.findById(id);
+        if (authUser.isPresent()){
+            AuthUserDto authUserDto = mapper.toDto(authUser.get());
+            return new ResponseEntity<>(new DataDto<>(authUserDto), HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(new DataDto<>(AppErrorDto
+                    .builder()
+                    .message("USER_NOT_FOUND")
+                    .status(HttpStatus.NOT_FOUND)
+                    .build()));
+        }
+    }
+
+    public ResponseEntity<DataDto<List<AuthUserDto>>>  getAll() {
+        List<AuthUser> authUserList = repository.findAll();
+        List<AuthUserDto> authUserDtoList = mapper.toDto(authUserList);
+        return new ResponseEntity<>(new DataDto<>(authUserDtoList));
     }
 }
