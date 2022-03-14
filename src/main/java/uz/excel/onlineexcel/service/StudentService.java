@@ -1,5 +1,6 @@
 package uz.excel.onlineexcel.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.excel.onlineexcel.dto.FilterDto;
 import uz.excel.onlineexcel.dto.student.StudentCreateDto;
@@ -8,6 +9,7 @@ import uz.excel.onlineexcel.dto.student.StudentUpdateDto;
 import uz.excel.onlineexcel.entity.Student;
 import uz.excel.onlineexcel.mapper.StudentMapper;
 import uz.excel.onlineexcel.repository.StudentRepository;
+import uz.excel.onlineexcel.response.AppErrorDto;
 import uz.excel.onlineexcel.response.DataDto;
 import uz.excel.onlineexcel.response.ResponseEntity;
 import uz.excel.onlineexcel.service.base.AbstractService;
@@ -204,35 +206,35 @@ public class StudentService extends AbstractService<StudentMapper, StudentReposi
     }
 
 
-    public StudentDto get(Long id) {
-
+    public ResponseEntity<DataDto<StudentDto>> get(Long id) {
         Optional<Student> student = repository.findById(id);
-
-        return mapper.toDto(student.get());
+        if (student.isPresent()) {
+            StudentDto studentDto = mapper.toDto(student.get());
+            return new ResponseEntity<>(new DataDto<>(studentDto));
+        } else {
+            return new ResponseEntity<>(new DataDto<>(AppErrorDto
+                    .builder()
+                    .message("STUDENT_NOT_FOUND")
+                    .status(HttpStatus.NOT_FOUND)
+                    .build()));
+        }
     }
 
-    public Long create(StudentCreateDto dto) {
-
+    public ResponseEntity<DataDto<Long>> create(StudentCreateDto dto) {
         Student student = mapper.fromCreateDto(dto);
-
-        return repository.save(student).getId();
-
+        Student save = repository.save(student);
+        return new ResponseEntity<>(new DataDto<>(save.getId()));
     }
 
-    public void update(StudentUpdateDto dto) {
-
-        Optional<Student> studentOptional = repository.findById(dto.getId());
-        Student student = studentOptional.get();
-
-        student = mapper.fromUpdateDto(dto, student);
-
-        repository.save(student);
+    public ResponseEntity<DataDto<Long>> update(StudentUpdateDto dto) {
+        Student student = mapper.fromUpdateDto(dto);
+        Student save = repository.save(student);
+        return new ResponseEntity<>(new DataDto<>(save.getId()));
     }
 
-    public void delete(Long id) {
-
+    public ResponseEntity<DataDto<Void>> delete(Long id) {
         repository.deleteById(id);
-
+        return null;
     }
 
 }
