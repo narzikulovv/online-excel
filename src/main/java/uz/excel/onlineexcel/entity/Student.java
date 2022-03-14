@@ -1,7 +1,6 @@
 package uz.excel.onlineexcel.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.ToString;
 import uz.excel.onlineexcel.entity.base.Auditable;
 
@@ -11,6 +10,9 @@ import javax.persistence.Table;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(schema = "auth")
 @ToString

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/auth/")
+@RequestMapping("/auth")
 public class AuthUserController extends AbstractController<AuthUserService> {
 
     public AuthUserController(AuthUserService service) {

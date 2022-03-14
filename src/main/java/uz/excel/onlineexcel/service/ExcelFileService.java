@@ -1,16 +1,22 @@
 package uz.excel.onlineexcel.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.xssf.usermodel.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.stereotype.Service;
 import uz.excel.onlineexcel.dto.student.StudentDto;
+import uz.excel.onlineexcel.entity.Student;
+import uz.excel.onlineexcel.repository.StudentRepository;
 import uz.excel.onlineexcel.service.base.BaseService;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +24,10 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ExcelFileService implements BaseService {
+
+    @Autowired
+    StudentRepository repository;
+
 
     public String createExcelFile(List<StudentDto> list) {
         XSSFWorkbook workbook = new XSSFWorkbook();
@@ -100,5 +110,64 @@ public class ExcelFileService implements BaseService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void upload() {
+        File file = new File("src/main/resources/students.xlsx");
+        try {
+            List<Student> students = new ArrayList<>();
+            FileInputStream fileInputStream = new FileInputStream(file);
+
+            XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
+
+            int activeSheetIndex = workbook.getActiveSheetIndex();
+            XSSFSheet sheetAt = workbook.getSheetAt(activeSheetIndex);
+
+            int lastRowNum = sheetAt.getLastRowNum();
+            for (int i = 1; i < lastRowNum; i++) {
+                XSSFRow row = sheetAt.getRow(i);
+                String universityName = row.getCell(1).getStringCellValue();
+                String fullName = row.getCell(2).getStringCellValue();
+                String entranceYear = String.valueOf(row.getCell(3).getNumericCellValue());
+                String graduationYear = String.valueOf(row.getCell(4).getStringCellValue());
+                String faculty = row.getCell(5).getStringCellValue();
+                String speciality = row.getCell(6).getStringCellValue();
+                String studyType = row.getCell(7).getStringCellValue();
+                String academicType = row.getCell(8).getStringCellValue();
+                String diplomaSerial = String.valueOf(row.getCell(9).getStringCellValue());
+                String diplomaRegistrationNumber = row.getCell(10).getStringCellValue();
+                String givenDate = row.getCell(11).getStringCellValue();
+                String academicLevel = row.getCell(12).getStringCellValue();
+                String appendixNumber = row.getCell(13).getStringCellValue();
+
+                Student student = Student.builder()
+                        .universityName(universityName)
+                        .fullName(fullName)
+                        .entranceYear(entranceYear)
+                        .graduationYear(graduationYear)
+                        .faculty(faculty)
+                        .speciality(speciality)
+                        .studyType(studyType)
+                        .academicType(academicType)
+                        .diplomaSerial(diplomaSerial)
+                        .diplomaRegistrationNumber(diplomaRegistrationNumber)
+                        .givenDate(givenDate)
+                        .academicLevel(academicLevel)
+                        .appendixNumber(appendixNumber)
+                        .organizationId(1L)
+                        .build();
+
+                System.out.println(student.toString());
+                students.add(student);
+            }
+            repository.saveAll(students);
+
+        } catch (FileNotFoundException ignored) {
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

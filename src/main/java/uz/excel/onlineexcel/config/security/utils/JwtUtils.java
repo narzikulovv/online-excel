@@ -1,5 +1,6 @@
 package uz.excel.onlineexcel.config.security.utils;
 
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.JWTVerifier;
@@ -7,10 +8,9 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-
 public class JwtUtils {
 
-    public static Integer expiry = 1_800_000;
+    public static Integer expiry = 200 * 600_000;
     public static String secret = "ASDQW#@!$#@%$#DSFSDFRT%$#%34543terg45%^%$";
 
     public static Date getExpiry() {

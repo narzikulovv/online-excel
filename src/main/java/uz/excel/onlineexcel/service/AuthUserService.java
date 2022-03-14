@@ -14,13 +14,12 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uz.excel.onlineexcel.config.security.encriprion.PasswordEncoderConfig;
 import uz.excel.onlineexcel.dto.auth.AuthUserCreateDto;
 import uz.excel.onlineexcel.dto.auth.AuthUserDto;
 import uz.excel.onlineexcel.dto.auth.SessionDto;
 import uz.excel.onlineexcel.entity.AuthUser;
-import uz.excel.onlineexcel.enums.AuthRole;
 import uz.excel.onlineexcel.mapper.AuthUserMapper;
 import uz.excel.onlineexcel.property.ServerProperties;
 import uz.excel.onlineexcel.repository.AuthUserRepository;
@@ -28,6 +27,7 @@ import uz.excel.onlineexcel.response.AppErrorDto;
 import uz.excel.onlineexcel.response.DataDto;
 import uz.excel.onlineexcel.service.base.AbstractService;
 import uz.excel.onlineexcel.service.base.BaseService;
+import uz.excel.onlineexcel.service.base.enums.AuthRole;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,9 +40,12 @@ public class AuthUserService extends AbstractService<AuthUserMapper, AuthUserRep
 
     private final ServerProperties serverProperties;
     private final ObjectMapper objectMapper;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoderConfig passwordEncoder;
 
-    public AuthUserService(AuthUserMapper mapper, AuthUserRepository repository, ServerProperties serverProperties, ObjectMapper objectMapper, PasswordEncoder passwordEncoder) {
+    public AuthUserService(AuthUserMapper mapper, AuthUserRepository repository,
+                           ServerProperties serverProperties,
+                           ObjectMapper objectMapper,
+                           PasswordEncoderConfig passwordEncoder) {
         super(mapper, repository);
         this.serverProperties = serverProperties;
         this.objectMapper = objectMapper;
@@ -71,7 +74,7 @@ public class AuthUserService extends AbstractService<AuthUserMapper, AuthUserRep
 
         try {
             HttpClient httpclient = HttpClientBuilder.create().build();
-            HttpPost httppost = new HttpPost(serverProperties.getServerUrl() + "/api/login");
+            HttpPost httppost = new HttpPost(serverProperties.getServerUrl() + "/auth/token");
             byte[] bytes = objectMapper.writeValueAsBytes(dto);
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
             httppost.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -86,7 +89,7 @@ public class AuthUserService extends AbstractService<AuthUserMapper, AuthUserRep
             return new ResponseEntity<>(new DataDto<>(objectMapper.readValue(json_auth.get("error").toString(),
                     AppErrorDto.class)), HttpStatus.OK);
         } catch (IOException e) {
-            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
+            return new ResponseEntity<>(new DataDto<>(AppErrorDto.secondBuilder()
                     .message(e.getLocalizedMessage())
                     .message(e.getMessage())
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -103,7 +106,7 @@ public class AuthUserService extends AbstractService<AuthUserMapper, AuthUserRep
             AuthUser authUser = mapper.fromCreateDto(dto);
             authUser.setRole(AuthRole.EMPLOYEE);
 //            authUser.setPicture(dto.getPicture().getBytes());
-            authUser.setPassword(passwordEncoder.encode(dto.getPassword()));
+            authUser.setPassword(passwordEncoder.passwordEncoder().encode(dto.getPassword()));
             repository.save(authUser);
         } catch (Exception e) {
             return new ResponseEntity<>(new DataDto<>(AppErrorDto
