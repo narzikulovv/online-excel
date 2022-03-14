@@ -3,11 +3,11 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/online_excel
     username: postgres
-    password: root123
+    password: 1
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     open-in-view: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
@@ -19,10 +19,6 @@ spring:
     user:
       name: admin
       password: admin123
-  servlet:
-    multipart:
-      max-file-size: 20MB
-      max-request-size: 20MB
 
 service:
   prop:
