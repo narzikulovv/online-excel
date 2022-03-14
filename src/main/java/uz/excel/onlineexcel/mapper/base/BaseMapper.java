@@ -1,6 +1,10 @@
 package uz.excel.onlineexcel.mapper.base;
 
 
+import org.mapstruct.MappingTarget;
+import uz.excel.onlineexcel.dto.student.StudentUpdateDto;
+import uz.excel.onlineexcel.entity.Student;
+
 import java.util.List;
 
 /**
@@ -18,6 +22,8 @@ public interface BaseMapper<E, D, CD, UD> extends Mapper {
 
     E fromCreateDto(CD cd);
 
-    E fromUpdateDto(UD ud);
+    E fromUpdateDto(UD dto);
+
+    E fromUpdateDto(UD dto ,@MappingTarget E entity);
 
 }

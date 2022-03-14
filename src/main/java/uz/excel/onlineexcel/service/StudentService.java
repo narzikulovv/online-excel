@@ -2,7 +2,10 @@ package uz.excel.onlineexcel.service;
 
 import org.springframework.stereotype.Service;
 import uz.excel.onlineexcel.dto.FilterDto;
+import uz.excel.onlineexcel.dto.student.StudentCreateDto;
 import uz.excel.onlineexcel.dto.student.StudentDto;
+import uz.excel.onlineexcel.dto.student.StudentUpdateDto;
+import uz.excel.onlineexcel.entity.Student;
 import uz.excel.onlineexcel.mapper.StudentMapper;
 import uz.excel.onlineexcel.repository.StudentRepository;
 import uz.excel.onlineexcel.response.DataDto;
@@ -12,6 +15,10 @@ import uz.excel.onlineexcel.service.base.BaseService;
 
 import java.sql.*;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 @Service
 public class StudentService extends AbstractService<StudentMapper, StudentRepository> implements BaseService {
@@ -75,130 +82,37 @@ public class StudentService extends AbstractService<StudentMapper, StudentReposi
                     isJoin = true;
                 }
 
-                if (Objects.nonNull(filterDto.getEntranceYear())) {
-                    if (isJoin) {
-                        query.append(" and entrance_year = ").append(filterDto.getEntranceYear());
-                    }
-                    query.append("entrance_year = ").append(filterDto.getEntranceYear());
-                    isJoin = true;
-                }
+    }
 
-                if (Objects.nonNull(filterDto.getGraduationYear())) {
-                    if (isJoin) {
-                        query.append(" and graduation_year = ").append(filterDto.getGraduationYear());
-                    }
-                    query.append("graduation_year = ").append(filterDto.getGraduationYear());
-                    isJoin = true;
-                }
+    public StudentDto get(Long id) {
 
-                if (Objects.nonNull(filterDto.getFaculty())) {
-                    if (isJoin) {
-                        query.append(" and faculty = ").append(filterDto.getFaculty());
-                    }
-                    query.append("faculty = ").append(filterDto.getFaculty());
-                    isJoin = true;
-                }
+        Optional<Student> student = repository.findById(id);
 
-                if (Objects.nonNull(filterDto.getSpeciality())) {
-                    if (isJoin) {
-                        query.append(" and speciality = ").append(filterDto.getSpeciality());
-                    }
-                    query.append("speciality = ").append(filterDto.getSpeciality());
-                    isJoin = true;
-                }
+        return mapper.toDto(student.get());
+    }
 
-                if (Objects.nonNull(filterDto.getStudyType())) {
-                    if (isJoin) {
-                        query.append(" and study_type = ").append(filterDto.getStudyType());
-                    }
-                    query.append("study_type = ").append(filterDto.getStudyType());
-                    isJoin = true;
-                }
+    public Long create(StudentCreateDto dto) {
 
+        Student student = mapper.fromCreateDto(dto);
 
-                if (Objects.nonNull(filterDto.getAcademicType())) {
-                    if (isJoin) {
-                        query.append(" and academic_type = ").append(filterDto.getAcademicType());
-                    }
-                    query.append("academic_type = ").append(filterDto.getAcademicType());
-                    isJoin = true;
-                }
-
-                if (Objects.nonNull(filterDto.getDiplomaSerial())) {
-                    if (isJoin) {
-                        query.append(" and diploma_serial = ").append(filterDto.getDiplomaSerial());
-                    }
-                    query.append("diploma_serial = ").append(filterDto.getDiplomaSerial());
-                    isJoin = true;
-                }
-
-                if (Objects.nonNull(filterDto.getDiplomaRegistrationNumber())) {
-                    if (isJoin) {
-                        query.append(" and diploma_registration_number = ").append(filterDto.getDiplomaRegistrationNumber());
-                    }
-                    query.append("diploma_registration_number = ").append(filterDto.getDiplomaRegistrationNumber());
-                    isJoin = true;
-                }
-
-                if (Objects.nonNull(filterDto.getGivenDate())) {
-                    if (isJoin) {
-                        query.append(" and given_date = ").append(filterDto.getGivenDate());
-                    }
-                    query.append("given_date = ").append(filterDto.getGivenDate());
-                    isJoin = true;
-                }
-
-                if (Objects.nonNull(filterDto.getAcademicLevel())) {
-                    if (isJoin) {
-                        query.append(" and academic_level = ").append(filterDto.getAcademicLevel());
-                    }
-                    query.append("academic_level = ").append(filterDto.getAcademicLevel());
-                    isJoin = true;
-                }
-
-                if (Objects.nonNull(filterDto.getAppendixNumber())) {
-                    if (isJoin) {
-                        query.append(" and appendix_number = ").append(filterDto.getAppendixNumber());
-                    }
-                    query.append("appendix_number = ").append(filterDto.getAppendixNumber());
-                }
-
-                query.append(" order by entrance_year desc limit 50");
-
-
-                PreparedStatement statement = connection.prepareStatement(query.toString());
-                ResultSet resultSet = statement.executeQuery();
-                while (resultSet.next()) {
-
-                    StudentDto studentDto = StudentDto.builder()
-                            .fullName(resultSet.getString("full_name"))
-                            .universityName(resultSet.getString("university_name"))
-                            .entranceYear(resultSet.getString("entrance_year"))
-                            .graduationYear(resultSet.getString("graduation_year"))
-                            .faculty(resultSet.getString("faculty"))
-                            .speciality(resultSet.getString("speciality"))
-                            .studyType(resultSet.getString("study_type"))
-                            .academicType(resultSet.getString("academic_type"))
-                            .diplomaSerial(resultSet.getString("diploma_serial"))
-                            .diplomaRegistrationNumber(resultSet.getString("diploma_registration_number"))
-                            .givenDate(resultSet.getString("given_date"))
-                            .academicLevel(resultSet.getString("academic_level"))
-                            .appendixNumber(resultSet.getString("appendix_number"))
-                            .organizationId(resultSet.getLong("organization_id"))
-                            .build();
-
-                    returnStudent.add(studentDto);
-
-                }
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            return new ResponseEntity<>(new DataDto<>(returnStudent));
-        }
+        return repository.save(student).getId();
 
     }
 
+    public void update(StudentUpdateDto dto) {
+
+        Optional<Student> studentOptional = repository.findById(dto.getId());
+        Student student = studentOptional.get();
+
+        student = mapper.fromUpdateDto(dto, student);
+
+        repository.save(student);
+    }
+
+    public void delete(Long id) {
+
+        repository.deleteById(id);
+
+    }
 
 }
