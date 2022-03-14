@@ -22,7 +22,7 @@ import uz.excel.onlineexcel.dto.auth.SessionDto;
 import uz.excel.onlineexcel.entity.AuthUser;
 import uz.excel.onlineexcel.enums.AuthRole;
 import uz.excel.onlineexcel.mapper.AuthUserMapper;
-import uz.excel.onlineexcel.properties.ServerProperties;
+import uz.excel.onlineexcel.property.ServerProperties;
 import uz.excel.onlineexcel.repository.AuthUserRepository;
 import uz.excel.onlineexcel.response.AppErrorDto;
 import uz.excel.onlineexcel.response.DataDto;
@@ -98,20 +98,20 @@ public class AuthUserService extends AbstractService<AuthUserMapper, AuthUserRep
         return null;
     }
 
-    public ResponseEntity<DataDto<Boolean>> create(AuthUserCreateDto dto){
-        try{
+    public ResponseEntity<DataDto<Boolean>> create(AuthUserCreateDto dto) {
+        try {
             AuthUser authUser = mapper.fromCreateDto(dto);
             authUser.setRole(AuthRole.EMPLOYEE);
 //            authUser.setPicture(dto.getPicture().getBytes());
             authUser.setPassword(passwordEncoder.encode(dto.getPassword()));
             repository.save(authUser);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(new DataDto<>(AppErrorDto
                     .builder()
                     .message(e.getMessage())
                     .status(HttpStatus.NOT_FOUND)
                     .build()), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(new DataDto<>(true),HttpStatus.OK);
+        return new ResponseEntity<>(new DataDto<>(true), HttpStatus.OK);
     }
 }
