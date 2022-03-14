@@ -86,7 +86,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         DataDto<AppErrorDto> resp = new DataDto<>(
                 AppErrorDto.builder()
                         .message(failed.getMessage())
-                        .path(request.getRequestURL().toString())
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .build()
         );
