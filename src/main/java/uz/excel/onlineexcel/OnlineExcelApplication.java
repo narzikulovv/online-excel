@@ -1,9 +1,12 @@
 package uz.excel.onlineexcel;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import uz.excel.onlineexcel.dto.auth.AuthUserCreateDto;
 import uz.excel.onlineexcel.property.OpenApiProperties;
 import uz.excel.onlineexcel.property.ServerProperties;
 
