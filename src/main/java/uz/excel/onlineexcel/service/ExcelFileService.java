@@ -182,7 +182,13 @@ public class ExcelFileService implements BaseService {
         if (cellType.equals(CellType.STRING)) {
             return cell.getStringCellValue();
         } else if (cellType.equals(CellType.NUMERIC)) {
-            return String.valueOf(cell.getNumericCellValue());
+            double numericCellValue = cell.getNumericCellValue();
+            int intValue = (int) numericCellValue;
+            if (numericCellValue == intValue) {
+                return String.valueOf(intValue);
+            } else {
+                return String.valueOf(numericCellValue);
+            }
         } else if (cellType.equals(CellType.BOOLEAN)) {
             return String.valueOf(cell.getBooleanCellValue());
         } else if (cellType.equals(CellType.FORMULA)) {
