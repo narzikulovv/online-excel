@@ -16,8 +16,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import uz.excel.onlineexcel.config.security.JwtUtils;
 import uz.excel.onlineexcel.dto.auth.AuthUserDto;
 import uz.excel.onlineexcel.dto.auth.SessionDto;
-import uz.excel.onlineexcel.dto.response.AppErrorDto;
-import uz.excel.onlineexcel.dto.response.DataDto;
+import uz.excel.onlineexcel.response.AppErrorDto;
+import uz.excel.onlineexcel.response.DataDto;
+
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -86,7 +87,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         DataDto<AppErrorDto> resp = new DataDto<>(
                 AppErrorDto.builder()
                         .message(failed.getMessage())
-                        .path(request.getRequestURL().toString())
+              //          .path(request.getRequestURL().toString())
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .build()
         );
