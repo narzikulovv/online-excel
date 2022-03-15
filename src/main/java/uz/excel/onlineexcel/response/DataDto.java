@@ -20,9 +20,9 @@ public class DataDto<T> implements Serializable {
 
     private Long totalCount;
 
-    public DataDto(boolean success) {
-        this.success = success;
-    }
+//    public DataDto(boolean success) {
+//        this.success = success;
+//    }
 
     public DataDto(T data) {
         this.data = data;

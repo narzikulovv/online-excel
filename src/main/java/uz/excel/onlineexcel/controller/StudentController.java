@@ -36,13 +36,13 @@ public class StudentController extends AbstractController<StudentService> {
     }
 
     @DeleteMapping(value = "delete/{id}")
-    public ResponseEntity<DataDto<Void>> delete(@PathVariable Long id) {
+    public ResponseEntity<DataDto<Boolean>> delete(@PathVariable Long id) {
         return service.delete(id);
     }
 
     @GetMapping("list")
     public ResponseEntity<DataDto<List<StudentDto>>> getAll() {
-        return service.getAllStudents();
+        return service.getAll();
     }
 
     @GetMapping("filter")
