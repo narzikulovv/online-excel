@@ -10,7 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import uz.excel.onlineexcel.config.security.JwtUtils;
+import uz.excel.onlineexcel.config.security.utils.JwtUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -22,7 +22,6 @@ import java.util.*;
 
 @Slf4j
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -52,6 +51,5 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         } else {
             filterChain.doFilter(request, response);
         }
-
     }
 }

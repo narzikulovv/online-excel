@@ -26,6 +26,7 @@ public class AppErrorDto {
     private String message;
     private String path;
 
+    @Builder
     public AppErrorDto(HttpStatus status, String message, WebRequest request) {
         this.timestamp = Timestamp.valueOf(LocalDateTime.now());
         this.status = status.value();
@@ -34,8 +35,7 @@ public class AppErrorDto {
         this.path = ((ServletWebRequest) request).getRequest().getRequestURI();
     }
 
-
-    @Builder
+    @Builder(builderMethodName = "secondBuilder")
     public AppErrorDto(HttpStatus status, String message, String path) {
         this.timestamp = Timestamp.valueOf(LocalDateTime.now());
         this.status = status.value();

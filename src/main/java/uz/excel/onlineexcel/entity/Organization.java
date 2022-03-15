@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(schema = "organization")
+@Table(schema = "organizationn", name = "organization")
 public class Organization extends Auditable {
 
     @Column

@@ -1,23 +1,32 @@
 package uz.excel.onlineexcel.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.xssf.usermodel.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.xssf.usermodel.*;
 import org.springframework.stereotype.Service;
 import uz.excel.onlineexcel.dto.student.StudentDto;
+import uz.excel.onlineexcel.entity.Student;
+import uz.excel.onlineexcel.repository.StudentRepository;
 import uz.excel.onlineexcel.service.base.BaseService;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.io.*;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ExcelFileService implements BaseService {
+
+    @Autowired
+    StudentRepository repository;
+
 
     public String createExcelFile(List<StudentDto> list) {
         XSSFWorkbook workbook = new XSSFWorkbook();
@@ -100,5 +109,94 @@ public class ExcelFileService implements BaseService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void upload() {
+        File file = new File("src/main/resources/students.xlsx");
+        try {
+            List<Student> students = new ArrayList<>();
+            FileInputStream fileInputStream = new FileInputStream(file);
+            //workbook created
+            XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
+
+            //total number of sheets
+            int numberOfSheets = workbook.getNumberOfSheets();
+
+            for (int sheetIndex = 0; sheetIndex < numberOfSheets; sheetIndex++) {
+                //sheet at current index
+                XSSFSheet sheetAt = workbook.getSheetAt(sheetIndex);
+
+                //total count of rows in current sheet
+                int lastRowNum = sheetAt.getLastRowNum();
+
+                for (int rowIndex = 1; rowIndex <= lastRowNum; rowIndex++) {
+                    //row at current index of current sheet
+                    XSSFRow row = sheetAt.getRow(rowIndex);
+
+                    String universityName = getValueFromCell(row, 1);
+                    String fullName = getValueFromCell(row, 2);
+                    String entranceYear = getValueFromCell(row, 3);
+                    String graduationYear = getValueFromCell(row, 4);
+                    String faculty = getValueFromCell(row, 5);
+                    String speciality = getValueFromCell(row, 6);
+                    String studyType = getValueFromCell(row, 7);
+                    String academicType = getValueFromCell(row, 8);
+                    String diplomaSerial = getValueFromCell(row, 9);
+                    String diplomaRegistrationNumber = getValueFromCell(row, 10);
+                    String givenDate = getValueFromCell(row, 11);
+                    String academicLevel = getValueFromCell(row, 12);
+                    String appendixNumber = getValueFromCell(row, 13);
+
+                    Student student = Student.builder()
+                            .universityName(universityName)
+                            .fullName(fullName)
+                            .entranceYear(entranceYear)
+                            .graduationYear(graduationYear)
+                            .faculty(faculty)
+                            .speciality(speciality)
+                            .studyType(studyType)
+                            .academicType(academicType)
+                            .diplomaSerial(diplomaSerial)
+                            .diplomaRegistrationNumber(diplomaRegistrationNumber)
+                            .givenDate(givenDate)
+                            .academicLevel(academicLevel)
+                            .appendixNumber(appendixNumber)
+                            .organizationId(1L)
+                            .build();
+
+                    students.add(student);
+                } //rows
+            } //sheets
+            repository.saveAll(students);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getValueFromCell(XSSFRow row, int cellIndex) {
+
+        XSSFCell cell = row.getCell(cellIndex);
+
+        CellType cellType = cell.getCellType();
+
+        if (cellType.equals(CellType.STRING)) {
+            return cell.getStringCellValue();
+        } else if (cellType.equals(CellType.NUMERIC)) {
+            double numericCellValue = cell.getNumericCellValue();
+            int intValue = (int) numericCellValue;
+            if (numericCellValue == intValue) {
+                return String.valueOf(intValue);
+            } else {
+                return String.valueOf(numericCellValue);
+            }
+        } else if (cellType.equals(CellType.BOOLEAN)) {
+            return String.valueOf(cell.getBooleanCellValue());
+        } else if (cellType.equals(CellType.FORMULA)) {
+            return cell.getCellFormula();
+        } else if (cellType.equals(CellType.ERROR)) {
+            return cell.getErrorCellString();
+        } else {
+            return String.valueOf(cell.getDateCellValue());
+        }
     }
 }

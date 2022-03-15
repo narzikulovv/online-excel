@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Getter
@@ -11,12 +12,12 @@ import javax.persistence.Table;
 //@Entity
 //@Table(schema = "excel")
 public class ExcelFile {
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String path;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String mimeType;
 }

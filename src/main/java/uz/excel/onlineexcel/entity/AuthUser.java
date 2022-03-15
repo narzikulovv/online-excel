@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import uz.excel.onlineexcel.entity.base.Auditable;
-import uz.excel.onlineexcel.enums.AuthRole;
-import uz.excel.onlineexcel.enums.Status;
+import uz.excel.onlineexcel.service.base.enums.AuthRole;
+import uz.excel.onlineexcel.service.base.enums.Status;
 
 import javax.persistence.*;
 
@@ -18,7 +18,7 @@ public class AuthUser extends Auditable implements GrantedAuthority {
     @Column
     private String fullName;
 
-    @Column
+    @Column(unique = true)
     private String phone;
 
     @Column

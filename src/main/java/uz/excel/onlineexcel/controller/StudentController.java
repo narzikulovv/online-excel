@@ -20,31 +20,25 @@ public class StudentController extends AbstractController<StudentService> {
         super(service);
     }
 
-
     @GetMapping(value = "get/{id}")
-    public ResponseEntity<StudentDto> get(@PathVariable Long id){
-        return new ResponseEntity<>(service.get(id));
+    public ResponseEntity<DataDto<StudentDto>> get(@PathVariable Long id) {
+        return service.get(id);
     }
 
     @PostMapping(value = "create")
-    public ResponseEntity<Long> create(@RequestBody StudentCreateDto dto){
-        Long id = service.create(dto);
-        return new ResponseEntity<>(id);
+    public ResponseEntity<DataDto<Long>> create(@RequestBody StudentCreateDto dto) {
+        return service.create(dto);
     }
 
-
     @PatchMapping(value = "update")
-    public ResponseEntity<String> update(@RequestBody StudentUpdateDto dto){
-        service.update(dto);
-        return new ResponseEntity<>("");
+    public ResponseEntity<DataDto<Long>> update(@RequestBody StudentUpdateDto dto) {
+        return service.update(dto);
     }
 
     @DeleteMapping(value = "delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id){
-        service.delete(id);
-        return new ResponseEntity<>("");
+    public ResponseEntity<DataDto<Void>> delete(@PathVariable Long id) {
+        return service.delete(id);
     }
-
 
     @GetMapping("list")
     public ResponseEntity<DataDto<List<StudentDto>>> getAll() {
@@ -55,7 +49,5 @@ public class StudentController extends AbstractController<StudentService> {
     public ResponseEntity<DataDto<List<StudentDto>>> getAllByFilter(@RequestBody FilterDto filterDto) {
         return service.getByFilter(filterDto);
     }
-
-
 
 }
