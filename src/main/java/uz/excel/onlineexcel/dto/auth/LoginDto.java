@@ -1,12 +1,16 @@
 package uz.excel.onlineexcel.dto.auth;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class LoginDto {
-    private String phone;
+
+    private String userName;
+
     private String password;
 }

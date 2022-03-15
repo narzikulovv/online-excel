@@ -9,30 +9,31 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import uz.excel.onlineexcel.config.security.encriprion.PasswordEncoderConfig;
-import uz.excel.onlineexcel.dto.auth.AuthUserCreateDto;
-import uz.excel.onlineexcel.dto.auth.AuthUserDto;
-import uz.excel.onlineexcel.dto.auth.SessionDto;
+import uz.excel.onlineexcel.dto.auth.*;
 import uz.excel.onlineexcel.entity.AuthUser;
+import uz.excel.onlineexcel.enums.AuthRole;
 import uz.excel.onlineexcel.mapper.AuthUserMapper;
 import uz.excel.onlineexcel.property.ServerProperties;
 import uz.excel.onlineexcel.repository.AuthUserRepository;
 import uz.excel.onlineexcel.response.AppErrorDto;
 import uz.excel.onlineexcel.response.DataDto;
+import uz.excel.onlineexcel.response.ResponseEntity;
 import uz.excel.onlineexcel.service.base.AbstractService;
 import uz.excel.onlineexcel.service.base.BaseService;
-import uz.excel.onlineexcel.service.base.enums.AuthRole;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class AuthUserService extends AbstractService<AuthUserMapper, AuthUserRepository>
@@ -40,12 +41,9 @@ public class AuthUserService extends AbstractService<AuthUserMapper, AuthUserRep
 
     private final ServerProperties serverProperties;
     private final ObjectMapper objectMapper;
-    private final PasswordEncoderConfig passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthUserService(AuthUserMapper mapper, AuthUserRepository repository,
-                           ServerProperties serverProperties,
-                           ObjectMapper objectMapper,
-                           PasswordEncoderConfig passwordEncoder) {
+    public AuthUserService(AuthUserMapper mapper, AuthUserRepository repository, ServerProperties serverProperties, ObjectMapper objectMapper, PasswordEncoder passwordEncoder) {
         super(mapper, repository);
         this.serverProperties = serverProperties;
         this.objectMapper = objectMapper;
@@ -54,8 +52,8 @@ public class AuthUserService extends AbstractService<AuthUserMapper, AuthUserRep
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AuthUser user = repository.findByUsername(username).orElseThrow(() -> {
+    public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
+        AuthUser user = repository.findByUsername(phone).orElseThrow(() -> {
             throw new UsernameNotFoundException("User not found");
         });
         return User.builder()
@@ -70,11 +68,11 @@ public class AuthUserService extends AbstractService<AuthUserMapper, AuthUserRep
                 .build();
     }
 
-    public ResponseEntity<DataDto<SessionDto>> getToken(AuthUserDto dto) {
+    public ResponseEntity<DataDto<SessionDto>> getToken(LoginDto dto) {
 
         try {
             HttpClient httpclient = HttpClientBuilder.create().build();
-            HttpPost httppost = new HttpPost(serverProperties.getServerUrl() + "/auth/token");
+            HttpPost httppost = new HttpPost(serverProperties.getServerUrl() + "/api/login");
             byte[] bytes = objectMapper.writeValueAsBytes(dto);
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
             httppost.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -89,7 +87,7 @@ public class AuthUserService extends AbstractService<AuthUserMapper, AuthUserRep
             return new ResponseEntity<>(new DataDto<>(objectMapper.readValue(json_auth.get("error").toString(),
                     AppErrorDto.class)), HttpStatus.OK);
         } catch (IOException e) {
-            return new ResponseEntity<>(new DataDto<>(AppErrorDto.secondBuilder()
+            return new ResponseEntity<>(new DataDto<>(AppErrorDto.builder()
                     .message(e.getLocalizedMessage())
                     .message(e.getMessage())
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -105,8 +103,8 @@ public class AuthUserService extends AbstractService<AuthUserMapper, AuthUserRep
         try {
             AuthUser authUser = mapper.fromCreateDto(dto);
             authUser.setRole(AuthRole.EMPLOYEE);
-//            authUser.setPicture(dto.getPicture().getBytes());
-            authUser.setPassword(passwordEncoder.passwordEncoder().encode(dto.getPassword()));
+            authUser.setPicture(dto.getPicture().getBytes());
+            authUser.setPassword(passwordEncoder.encode(dto.getPassword()));
             repository.save(authUser);
         } catch (Exception e) {
             return new ResponseEntity<>(new DataDto<>(AppErrorDto
@@ -116,5 +114,47 @@ public class AuthUserService extends AbstractService<AuthUserMapper, AuthUserRep
                     .build()), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(new DataDto<>(true), HttpStatus.OK);
+    }
+
+    public ResponseEntity<DataDto<Void>> delete(Long id) {
+        repository.deleteById(id);
+        return new ResponseEntity<>(new DataDto<>(),HttpStatus.OK);
+    }
+
+    public ResponseEntity<DataDto<AuthUserDto>>  get(Long id) {
+       Optional<AuthUser> authUser = repository.findById(id);
+        if (authUser.isPresent()){
+            AuthUserDto authUserDto = mapper.toDto(authUser.get());
+            return new ResponseEntity<>(new DataDto<>(authUserDto), HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(new DataDto<>(AppErrorDto
+                    .builder()
+                    .message("USER_NOT_FOUND")
+                    .status(HttpStatus.NOT_FOUND)
+                    .build()));
+        }
+    }
+
+    public ResponseEntity<DataDto<List<AuthUserDto>>>  getAll() {
+        List<AuthUser> authUserList = repository.findAll();
+        List<AuthUserDto> authUserDtoList = mapper.toDto(authUserList);
+        return new ResponseEntity<>(new DataDto<>(authUserDtoList));
+    }
+
+    public ResponseEntity<DataDto<Long>> update(AuthUserUpdateDto dto){
+        try{
+            Optional<AuthUser> authUser = repository.findById(dto.getId());
+            AuthUser authUser1 = mapper.fromUpdateDto(dto, authUser.get());
+            if (Objects.nonNull(dto.getPicture())) {
+                authUser1.setPicture(dto.getPicture().getBytes());
+            }
+            return new ResponseEntity<>(new DataDto<>(repository.save(authUser1).getId()), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(new DataDto<>(AppErrorDto
+                    .builder()
+                    .message("USER_NOT_FOUND")
+                    .status(HttpStatus.NOT_FOUND)
+                    .build()));
+        }
     }
 }

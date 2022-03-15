@@ -1,20 +1,23 @@
 package uz.excel.onlineexcel.dto.auth;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import uz.excel.onlineexcel.dto.base.BaseDto;
 import uz.excel.onlineexcel.dto.base.GenericDto;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class AuthUserDto {
+public class AuthUserDto extends GenericDto {
+//    private String userName;
+//
+//    private String password;
 
-    private String username;
+    private String userName;
+
     private String password;
 
+    private String fullName;
+
+    private String phone;
+
+    private String picture;
 }

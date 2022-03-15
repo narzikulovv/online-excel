@@ -2,6 +2,8 @@ package uz.excel.onlineexcel.service.base;
 
 import uz.excel.onlineexcel.dto.base.BaseDto;
 import uz.excel.onlineexcel.dto.base.GenericDto;
+import uz.excel.onlineexcel.response.DataDto;
+import uz.excel.onlineexcel.response.ResponseEntity;
 
 /**
  * @param <D>  -> Dto
@@ -13,10 +15,10 @@ public interface GenericCrudService<
         CD extends BaseDto,
         UD extends GenericDto> extends GenericService<D> {
 
-    Long create(CD createDto);
+    ResponseEntity<DataDto<Long>> create(CD createDto);
 
-    void delete(Long id);
+    ResponseEntity<DataDto<Boolean>> delete(Long id);
 
-    void update(UD updateDto);
+    ResponseEntity<DataDto<Long>> update(UD updateDto);
 
 }

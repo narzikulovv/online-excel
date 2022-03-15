@@ -14,7 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import uz.excel.onlineexcel.config.security.utils.JwtUtils;
-import uz.excel.onlineexcel.dto.auth.AuthUserDto;
+import uz.excel.onlineexcel.dto.auth.LoginDto;
 import uz.excel.onlineexcel.dto.auth.SessionDto;
 import uz.excel.onlineexcel.response.AppErrorDto;
 import uz.excel.onlineexcel.response.DataDto;
@@ -33,16 +33,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-        super.setFilterProcessesUrl("/auth/token");
+        super.setFilterProcessesUrl("/api/login");
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            AuthUserDto loginDto = new ObjectMapper().readValue(request.getReader(), AuthUserDto.class);
-            log.info("Username is: {}", loginDto.getUsername());
+            LoginDto loginDto = new ObjectMapper().readValue(request.getReader(), LoginDto.class);
+            log.info("Username is: {}", loginDto.getUserName());
             UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+                    new UsernamePasswordAuthenticationToken(loginDto.getUserName(), loginDto.getPassword());
             return authenticationManager.authenticate(authenticationToken);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
@@ -84,9 +84,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         DataDto<AppErrorDto> resp = new DataDto<>(
-                AppErrorDto.secondBuilder()
+                AppErrorDto.builder()
                         .message(failed.getMessage())
-                        .path(request.getRequestURL().toString())
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .build()
         );

@@ -36,7 +36,7 @@ public class OrganizationController extends AbstractController<OrganizationServi
     }
 
     @DeleteMapping(value = "delete/{id}")
-    public ResponseEntity<DataDto<Void>> delete(@PathVariable Long id) {
+    public ResponseEntity<DataDto<Boolean>> delete(@PathVariable Long id) {
         return service.delete(id);
     }
 
