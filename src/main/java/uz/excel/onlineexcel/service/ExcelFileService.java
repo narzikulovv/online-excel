@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.io.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -112,7 +113,7 @@ public class ExcelFileService implements BaseService {
     }
 
     public void upload() {
-        File file = new File("src/main/resources/students.xlsx");
+        File file = new File("src/main/resources/filelarnew.xlsx");
         try {
             List<Student> students = new ArrayList<>();
             FileInputStream fileInputStream = new FileInputStream(file);
@@ -132,9 +133,14 @@ public class ExcelFileService implements BaseService {
                 for (int rowIndex = 1; rowIndex <= lastRowNum; rowIndex++) {
                     //row at current index of current sheet
                     XSSFRow row = sheetAt.getRow(rowIndex);
-
+                    if (Objects.isNull(row)) {
+                        continue;
+                    }
                     String universityName = getValueFromCell(row, 1);
                     String fullName = getValueFromCell(row, 2);
+                    if (Objects.equals(fullName, "")) {
+                        fullName = "" + sheetAt.getSheetName() + "===>" + row.getRowNum() + getValueFromCell(row, 0);
+                    }
                     String entranceYear = getValueFromCell(row, 3);
                     String graduationYear = getValueFromCell(row, 4);
                     String faculty = getValueFromCell(row, 5);
@@ -176,7 +182,9 @@ public class ExcelFileService implements BaseService {
     private String getValueFromCell(XSSFRow row, int cellIndex) {
 
         XSSFCell cell = row.getCell(cellIndex);
-
+        if (Objects.isNull(cell)) {
+            return "";
+        }
         CellType cellType = cell.getCellType();
 
         if (cellType.equals(CellType.STRING)) {
