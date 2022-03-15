@@ -13,17 +13,23 @@ import uz.excel.onlineexcel.response.DataDto;
 import uz.excel.onlineexcel.response.ResponseEntity;
 import uz.excel.onlineexcel.service.base.AbstractService;
 import uz.excel.onlineexcel.service.base.BaseService;
+import uz.excel.onlineexcel.service.base.GenericCrudService;
+import uz.excel.onlineexcel.service.base.GenericService;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class OrganizationService extends AbstractService<OrganizationMapper, OrganizationRepository> implements BaseService {
+public class OrganizationService
+        extends AbstractService<OrganizationMapper, OrganizationRepository>
+        implements GenericCrudService<OrganizationDto, OrganizationCreateDto, OrganizationUpdateDto>,
+        GenericService<OrganizationDto>, BaseService {
 
     public OrganizationService(OrganizationMapper mapper, OrganizationRepository repository) {
         super(mapper, repository);
     }
 
+    @Override
     public ResponseEntity<DataDto<OrganizationDto>> get(Long id) {
         Optional<Organization> organization = repository.findById(id);
         if (organization.isPresent()) {
@@ -38,27 +44,32 @@ public class OrganizationService extends AbstractService<OrganizationMapper, Org
         }
     }
 
+    @Override
     public ResponseEntity<DataDto<Long>> create(OrganizationCreateDto dto) {
         Organization organization = mapper.fromCreateDto(dto);
         Organization save = repository.save(organization);
         return new ResponseEntity<>(new DataDto<>(save.getId()));
     }
 
-
+    @Override
     public ResponseEntity<DataDto<Long>> update(OrganizationUpdateDto dto) {
         Organization organization = mapper.fromUpdateDto(dto);
         Organization save = repository.save(organization);
         return new ResponseEntity<>(new DataDto<>(save.getId()));
     }
 
-    public ResponseEntity<DataDto<Void>> delete(Long id) {
+    @Override
+    public ResponseEntity<DataDto<Boolean>> delete(Long id) {
         repository.deleteById(id);
-        return null;
+        return new ResponseEntity<>(new DataDto<>(true));
     }
 
+    @Override
     public ResponseEntity<DataDto<List<OrganizationDto>>> getAll() {
         List<Organization> organizationList = repository.findAll();
         List<OrganizationDto> organizationDtoList = mapper.toDto(organizationList);
         return new ResponseEntity<>(new DataDto<>(organizationDtoList));
     }
+
+
 }

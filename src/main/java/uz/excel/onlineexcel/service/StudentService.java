@@ -14,51 +14,29 @@ import uz.excel.onlineexcel.response.DataDto;
 import uz.excel.onlineexcel.response.ResponseEntity;
 import uz.excel.onlineexcel.service.base.AbstractService;
 import uz.excel.onlineexcel.service.base.BaseService;
+import uz.excel.onlineexcel.service.base.GenericCrudService;
+import uz.excel.onlineexcel.service.base.GenericService;
 
 import java.sql.*;
 import java.util.*;
 
 @Service
-public class StudentService extends AbstractService<StudentMapper, StudentRepository> implements BaseService {
+public class StudentService
+        extends AbstractService<StudentMapper, StudentRepository>
+        implements GenericCrudService<StudentDto, StudentCreateDto, StudentUpdateDto>,
+        GenericService<StudentDto>, BaseService {
 
     public StudentService(StudentMapper mapper, StudentRepository repository) {
         super(mapper, repository);
     }
 
-    public List<StudentDto> getAll() {
-        List<StudentDto> list = new ArrayList<>();
-        StudentDto dto = StudentDto
-                .builder()
-                .fullName("Doston Bokhodirov")
-                .universityName("TKTI")
-                .entranceYear("2019")
-                .graduationYear("2023")
-                .faculty("Menejment")
-                .speciality("Menejment")
-                .studyType("kontrakt")
-                .academicType("kunduzgi")
-                .diplomaSerial("12345")
-                .diplomaRegistrationNumber("111")
-                .givenDate("01.01.2023")
-                .academicLevel("bakalavr")
-                .appendixNumber("0")
-                .organizationId(100L)
-                .build();
-        list.add(dto);
-        return list;
-    }
-
-
-    public ResponseEntity<DataDto<List<StudentDto>>> getAllStudents() {
-        return new ResponseEntity<>(new DataDto<>(mapper.toDto(repository.findAllByCount())));
-    }
 
     public ResponseEntity<DataDto<List<StudentDto>>> getByFilter(FilterDto filterDto) {
 
         List<StudentDto> returnStudent = new ArrayList<>(Collections.emptyList());
 
         if (Objects.isNull(filterDto)) {
-            return getAllStudents();
+            return getAll();
         } else {
 
             try {
@@ -205,7 +183,7 @@ public class StudentService extends AbstractService<StudentMapper, StudentReposi
 
     }
 
-
+    @Override
     public ResponseEntity<DataDto<StudentDto>> get(Long id) {
         Optional<Student> student = repository.findById(id);
         if (student.isPresent()) {
@@ -220,21 +198,29 @@ public class StudentService extends AbstractService<StudentMapper, StudentReposi
         }
     }
 
+    @Override
+    public ResponseEntity<DataDto<List<StudentDto>>> getAll() {
+        return new ResponseEntity<>(new DataDto<>(mapper.toDto(repository.findAllByCount())));
+    }
+
+    @Override
     public ResponseEntity<DataDto<Long>> create(StudentCreateDto dto) {
         Student student = mapper.fromCreateDto(dto);
         Student save = repository.save(student);
         return new ResponseEntity<>(new DataDto<>(save.getId()));
     }
 
+    @Override
     public ResponseEntity<DataDto<Long>> update(StudentUpdateDto dto) {
         Student student = mapper.fromUpdateDto(dto);
         Student save = repository.save(student);
         return new ResponseEntity<>(new DataDto<>(save.getId()));
     }
 
-    public ResponseEntity<DataDto<Void>> delete(Long id) {
+    @Override
+    public ResponseEntity<DataDto<Boolean>> delete(Long id) {
         repository.deleteById(id);
-        return null;
+        return new ResponseEntity<>(new DataDto<>(true));
     }
 
 }
