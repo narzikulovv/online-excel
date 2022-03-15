@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/online_excel
-    username: postgres
-    password: 2001
+    url: jdbc:postgresql://ec2-3-227-55-25.compute-1.amazonaws.com:5432/d1q68v8hsn921r
+    username: brtozecldfvewq
+    password: 76e1ac1ccac120a2727c2713ee3f129ae64778c3be344088da1d27a16c3f33a9
   jpa:
     show-sql: true
     hibernate:
