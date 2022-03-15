@@ -1,16 +1,20 @@
 package uz.excel.onlineexcel.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import uz.excel.onlineexcel.entity.base.Auditable;
-import uz.excel.onlineexcel.service.base.enums.AuthRole;
-import uz.excel.onlineexcel.service.base.enums.Status;
+import uz.excel.onlineexcel.enums.AuthRole;
+import uz.excel.onlineexcel.enums.Status;
 
 import javax.persistence.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(schema = "auth", name = "auth_user")
 public class AuthUser extends Auditable implements GrantedAuthority {

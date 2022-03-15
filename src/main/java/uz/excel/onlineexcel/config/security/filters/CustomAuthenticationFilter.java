@@ -13,8 +13,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import uz.excel.onlineexcel.config.security.JwtUtils;
-import uz.excel.onlineexcel.dto.auth.AuthUserDto;
+import uz.excel.onlineexcel.config.security.utils.JwtUtils;
+import uz.excel.onlineexcel.dto.auth.LoginDto;
 import uz.excel.onlineexcel.dto.auth.SessionDto;
 import uz.excel.onlineexcel.response.AppErrorDto;
 import uz.excel.onlineexcel.response.DataDto;
@@ -39,7 +39,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            AuthUserDto loginDto = new ObjectMapper().readValue(request.getReader(), AuthUserDto.class);
+            LoginDto loginDto = new ObjectMapper().readValue(request.getReader(), LoginDto.class);
             log.info("Username is: {}", loginDto.getUserName());
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(loginDto.getUserName(), loginDto.getPassword());

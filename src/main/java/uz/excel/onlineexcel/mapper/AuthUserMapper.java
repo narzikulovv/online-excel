@@ -1,8 +1,6 @@
 package uz.excel.onlineexcel.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 import org.springframework.stereotype.Component;
 import uz.excel.onlineexcel.dto.auth.AuthUserCreateDto;
 import uz.excel.onlineexcel.dto.auth.AuthUserDto;
@@ -20,6 +18,7 @@ public interface AuthUserMapper extends BaseMapper<AuthUser,
         AuthUserUpdateDto> {
 
     @Override
+    @Mapping(target = "picture",ignore = true)
     AuthUserDto toDto(AuthUser authUser);
 
     @Override
@@ -31,5 +30,12 @@ public interface AuthUserMapper extends BaseMapper<AuthUser,
     AuthUser fromCreateDto(AuthUserCreateDto authUserCreateDto);
 
     @Override
-    AuthUser fromUpdateDto(AuthUserUpdateDto authUserUpdateDto);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target="picture",ignore = true)
+    AuthUser fromUpdateDto(AuthUserUpdateDto authUserUpdateDto,@MappingTarget AuthUser dto);
+
+    @Override
+    @Mapping(target="picture",ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    AuthUser fromUpdateDto(AuthUserUpdateDto dto);
 }

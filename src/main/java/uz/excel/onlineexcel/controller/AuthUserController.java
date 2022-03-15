@@ -1,12 +1,8 @@
 package uz.excel.onlineexcel.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import uz.excel.onlineexcel.controller.base.AbstractController;
-import uz.excel.onlineexcel.dto.auth.AuthUserCreateDto;
-import uz.excel.onlineexcel.dto.auth.AuthUserDto;
-import uz.excel.onlineexcel.dto.auth.SessionDto;
-import uz.excel.onlineexcel.entity.AuthUser;
+import uz.excel.onlineexcel.dto.auth.*;
 import uz.excel.onlineexcel.response.DataDto;
 import uz.excel.onlineexcel.response.ResponseEntity;
 import uz.excel.onlineexcel.service.AuthUserService;
@@ -24,7 +20,8 @@ public class AuthUserController extends AbstractController<AuthUserService> {
     }
 
     @RequestMapping(value = "/token", method = RequestMethod.POST)
-    public ResponseEntity<DataDto<SessionDto>> getToken(@RequestBody AuthUserDto dto) {
+    public ResponseEntity<DataDto<SessionDto>> getToken(@RequestBody LoginDto dto) {
+
         return service.getToken(dto);
     }
 
@@ -36,6 +33,11 @@ public class AuthUserController extends AbstractController<AuthUserService> {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<DataDto<Boolean>> create(@RequestBody AuthUserCreateDto dto) {
         return service.create(dto);
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public ResponseEntity<DataDto<Long>> update(@RequestBody AuthUserUpdateDto dto) {
+        return service.update(dto);
     }
 
     @RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE)
