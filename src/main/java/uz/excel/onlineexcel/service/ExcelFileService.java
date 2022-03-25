@@ -168,10 +168,22 @@ public class ExcelFileService implements BaseService {
                             .organizationId(1L)
                             .build();
 
-                    if (!(student.getFullName().equals("")
-                            && student.getDiplomaSerial().equals("")
-                            && student.getDiplomaRegistrationNumber().equals("")
-                            && student.getEntranceYear().equals(""))) {
+                    if (
+                            !(
+                                    (
+                                            student.getFullName().equals("")
+                                                    && student.getDiplomaSerial().equals("")
+                                                    && student.getDiplomaRegistrationNumber().equals("")
+                                                    && student.getEntranceYear().equals("")
+                                    ) || (
+                                            student.getFullName().equals("null")
+                                                    && student.getDiplomaSerial().equals("null")
+                                                    && student.getDiplomaRegistrationNumber().equals("null")
+                                                    && student.getEntranceYear().equals("null")
+
+                                    )
+                            )
+                    ) {
 
                         students.add(student);
                     }
