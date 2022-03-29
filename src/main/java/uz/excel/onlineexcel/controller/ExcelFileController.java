@@ -4,10 +4,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uz.excel.onlineexcel.controller.base.AbstractController;
 import uz.excel.onlineexcel.dto.student.StudentDto;
 import uz.excel.onlineexcel.service.ExcelFileService;
@@ -30,7 +27,7 @@ public class ExcelFileController extends AbstractController<ExcelFileService> {
         this.servletContext = servletContext;
     }
 
-    @RequestMapping("/download")
+    @GetMapping("/download")
     public ResponseEntity<InputStreamResource> getExcelFile(@RequestBody List<StudentDto> dtoList) throws IOException {
         String excelFileName = service.createExcelFile(dtoList);
         MediaType mediaType = MediaTypeUtils.getMediaTypeForFileName(this.servletContext, excelFileName);
@@ -43,7 +40,7 @@ public class ExcelFileController extends AbstractController<ExcelFileService> {
                 .body(resource);
     }
 
-    @RequestMapping(value = "/upload/{id}")
+    @GetMapping(value = "/upload/{id}")
     public void uploadFile(@PathVariable String id){
         if (!id.equals("123123")) return;
         service.upload();

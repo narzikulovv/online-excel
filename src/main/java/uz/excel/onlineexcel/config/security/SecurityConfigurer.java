@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import uz.excel.onlineexcel.config.security.filters.CustomAuthenticationFilter;
 import uz.excel.onlineexcel.config.security.filters.CustomAuthorizationFilter;
-import uz.excel.onlineexcel.service.AuthUserService;
+import uz.excel.onlineexcel.service.AuthService;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -31,7 +31,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
             "/api-docs/**" ,
             "/api/v1/log/**"
     };
-    private final AuthUserService userService;
+    private final AuthService userService;
     private final PasswordEncoder passwordEncoder;
 
     @Override

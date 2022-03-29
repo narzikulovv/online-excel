@@ -1,11 +1,11 @@
 package uz.excel.onlineexcel.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
 import org.springframework.stereotype.Service;
 import uz.excel.onlineexcel.dto.student.StudentDto;
 import uz.excel.onlineexcel.entity.Student;
@@ -13,11 +13,12 @@ import uz.excel.onlineexcel.repository.StudentRepository;
 import uz.excel.onlineexcel.service.base.BaseService;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.io.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -112,7 +113,7 @@ public class ExcelFileService implements BaseService {
     }
 
     public void upload() {
-        File file = new File("src/main/resources/students.xlsx");
+        File file = new File("src/main/resources/filelarnew.xlsx");
         try {
             List<Student> students = new ArrayList<>();
             FileInputStream fileInputStream = new FileInputStream(file);
@@ -133,6 +134,9 @@ public class ExcelFileService implements BaseService {
                     //row at current index of current sheet
                     XSSFRow row = sheetAt.getRow(rowIndex);
 
+                    if (Objects.isNull(row)) {
+                        continue;
+                    }
                     String universityName = getValueFromCell(row, 1);
                     String fullName = getValueFromCell(row, 2);
                     String entranceYear = getValueFromCell(row, 3);
@@ -164,9 +168,30 @@ public class ExcelFileService implements BaseService {
                             .organizationId(1L)
                             .build();
 
-                    students.add(student);
+                    if (
+                            !(
+                                    (
+                                            student.getFullName().equals("")
+                                                    && student.getDiplomaSerial().equals("")
+                                                    && student.getDiplomaRegistrationNumber().equals("")
+                                                    && student.getEntranceYear().equals("")
+                                    ) || (
+                                            student.getFullName().equals("null")
+                                                    && student.getDiplomaSerial().equals("null")
+                                                    && student.getDiplomaRegistrationNumber().equals("null")
+                                                    && student.getEntranceYear().equals("null")
+
+                                    )
+                            )
+                    ) {
+
+                        students.add(student);
+                    }
+
                 } //rows
+
             } //sheets
+
             repository.saveAll(students);
         } catch (IOException e) {
             e.printStackTrace();
@@ -176,7 +201,9 @@ public class ExcelFileService implements BaseService {
     private String getValueFromCell(XSSFRow row, int cellIndex) {
 
         XSSFCell cell = row.getCell(cellIndex);
-
+        if (Objects.isNull(cell)) {
+            return "";
+        }
         CellType cellType = cell.getCellType();
 
         if (cellType.equals(CellType.STRING)) {

@@ -16,7 +16,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(schema = "auth", name = "auth_user")
+@Table(name = "auth_user")
 public class AuthUser extends Auditable implements GrantedAuthority {
 
     @Column
@@ -42,7 +42,7 @@ public class AuthUser extends Auditable implements GrantedAuthority {
     @Enumerated(value = EnumType.STRING)
     private Status status;
 
-//    @Column(nullable = false)
+    //    @Column(nullable = false)
     @Column(name = "organization_id")
     private Long organizationId;
 

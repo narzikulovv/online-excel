@@ -1,12 +1,10 @@
 package uz.excel.onlineexcel.entity;
 
 import lombok.*;
-import lombok.ToString;
 import uz.excel.onlineexcel.entity.base.Auditable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 @Getter
 @Setter
@@ -14,7 +12,6 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(schema = "auth")
 @ToString
 public class Student extends Auditable {
 

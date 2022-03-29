@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.security.crypto.password.PasswordEncoder;
 import uz.excel.onlineexcel.property.OpenApiProperties;
 import uz.excel.onlineexcel.property.ServerProperties;
-import uz.excel.onlineexcel.service.AuthUserService;
+import uz.excel.onlineexcel.service.AuthService;
 
 
 @SpringBootApplication
@@ -22,7 +22,7 @@ import uz.excel.onlineexcel.service.AuthUserService;
 public class OnlineExcelApplication {
 
     @Autowired
-    AuthUserService userService;
+    AuthService userService;
     @Autowired
     PasswordEncoder passwordEncoder;
 

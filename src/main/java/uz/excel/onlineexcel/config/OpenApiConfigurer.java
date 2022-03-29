@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uz.excel.onlineexcel.property.OpenApiProperties;
 
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -56,7 +57,7 @@ public class OpenApiConfigurer {
     private List<SecurityRequirement> getSecurityRequirement() {
         SecurityRequirement securityRequirement = new SecurityRequirement();
         securityRequirement.addList(SECURITY_SCHEME_NAME);
-        return List.of(securityRequirement);
+        return Collections.singletonList(securityRequirement);
     }
 
     private SecurityScheme getSecurityScheme() {
