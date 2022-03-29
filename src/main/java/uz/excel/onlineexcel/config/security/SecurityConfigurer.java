@@ -23,34 +23,34 @@ import uz.excel.onlineexcel.service.AuthUserService;
 )
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     public final static String[] WHITE_LIST = {
-            "/**",
-            "/auth/token",
-            "/auth/refresh-token",
-            "/auth/register",
-            "/swagger-ui/**",
-            "/api-docs/**",
+            "/**" ,
+            "/auth/token" ,
+            "/auth/refresh-token" ,
+            "/auth/register" ,
+            "/swagger-ui/**" ,
+            "/api-docs/**" ,
             "/api/v1/log/**"
     };
     private final AuthUserService userService;
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
+    protected void configure( AuthenticationManagerBuilder auth ) throws Exception {
+        auth.userDetailsService( userService ).passwordEncoder( passwordEncoder );
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    protected void configure( HttpSecurity http ) throws Exception {
         http.csrf().disable();
         http.cors().disable();
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS );
         http.authorizeRequests()
-                .antMatchers(WHITE_LIST)
+                .antMatchers( WHITE_LIST )
                 .permitAll()
                 .anyRequest().authenticated();
 
-        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
-        http.addFilterBefore(new CustomAuthorizationFilter(),UsernamePasswordAuthenticationFilter.class);
+        http.addFilter( new CustomAuthenticationFilter( authenticationManagerBean() ) );
+        http.addFilterBefore( new CustomAuthorizationFilter() , UsernamePasswordAuthenticationFilter.class );
 
     }
 

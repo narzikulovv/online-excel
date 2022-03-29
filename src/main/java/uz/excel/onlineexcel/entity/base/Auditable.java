@@ -13,12 +13,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners( AuditingEntityListener.class )
 public class Auditable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, unique = true)
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    @Column( nullable = false, unique = true )
     private Long id;
 
 }
