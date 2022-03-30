@@ -1,6 +1,8 @@
 package uz.excel.onlineexcel.mapper;
 
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import uz.excel.onlineexcel.dto.auth.AuthUserCreateDto;
 import uz.excel.onlineexcel.dto.auth.AuthUserDto;
@@ -25,7 +27,6 @@ public interface AuthUserMapper extends BaseMapper<AuthUser,
     List<AuthUserDto> toDto(List<AuthUser> e);
 
     @Override
-    @Mapping(target="picture",ignore = true)
     @Mapping(target="password",ignore = true)
     AuthUser fromCreateDto(AuthUserCreateDto authUserCreateDto);
 

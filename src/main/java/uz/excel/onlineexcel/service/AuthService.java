@@ -8,13 +8,15 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import uz.excel.onlineexcel.dto.auth.*;
+import uz.excel.onlineexcel.dto.auth.LoginDto;
+import uz.excel.onlineexcel.dto.auth.SessionDto;
 import uz.excel.onlineexcel.entity.AuthUser;
 import uz.excel.onlineexcel.mapper.AuthUserMapper;
 import uz.excel.onlineexcel.property.ServerProperties;
@@ -38,7 +40,7 @@ public class AuthService
     private final ServerProperties serverProperties;
     private final ObjectMapper objectMapper;
 
-    public AuthService(AuthUserMapper mapper, AuthUserRepository repository, ServerProperties serverProperties, ObjectMapper objectMapper) {
+    public AuthService( AuthUserMapper mapper, AuthUserRepository repository, ServerProperties serverProperties, ObjectMapper objectMapper) {
         super(mapper, repository);
         this.serverProperties = serverProperties;
         this.objectMapper = objectMapper;
