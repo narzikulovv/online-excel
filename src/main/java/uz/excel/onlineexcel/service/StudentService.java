@@ -8,6 +8,7 @@ import uz.excel.onlineexcel.dto.student.StudentDto;
 import uz.excel.onlineexcel.dto.student.StudentUpdateDto;
 import uz.excel.onlineexcel.entity.Student;
 import uz.excel.onlineexcel.mapper.StudentMapper;
+import uz.excel.onlineexcel.property.ConnectionProperties;
 import uz.excel.onlineexcel.repository.StudentRepository;
 import uz.excel.onlineexcel.response.AppErrorDto;
 import uz.excel.onlineexcel.response.DataDto;
@@ -26,8 +27,13 @@ public class StudentService
         implements GenericCrudService<StudentDto, StudentCreateDto, StudentUpdateDto>,
         GenericService<StudentDto>, BaseService {
 
-    public StudentService(StudentMapper mapper, StudentRepository repository) {
+    private final ConnectionProperties properties;
+
+    public StudentService(StudentMapper mapper,
+                          StudentRepository repository,
+                          ConnectionProperties properties) {
         super(mapper, repository);
+        this.properties = properties;
     }
 
 
@@ -41,7 +47,8 @@ public class StudentService
         } else {
 
             try {
-                Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/online_excel", "postgres", "iPhone0303");
+
+                Connection connection = DriverManager.getConnection(properties.getUrl(), properties.getUsername(), properties.getPassword());
 
                 boolean isJoin = false;
                 StringBuilder query = new StringBuilder("select  *  from auth.student where ");
