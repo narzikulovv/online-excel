@@ -3,6 +3,8 @@ package uz.excel.onlineexcel.dto.auth;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 import uz.excel.onlineexcel.dto.base.BaseDto;
 
@@ -18,6 +20,5 @@ public class AuthUserCreateDto implements BaseDto {
     private String fullName;
 
     private String phone;
-
-    private String picture; //what the hack
 }
+
