@@ -47,104 +47,104 @@ public class StudentService
                 StringBuilder query = new StringBuilder("select  *  from auth.student where ");
 
                 if (Objects.nonNull(filterDto.getFullName())) {
-                    query.append("full_name ilike '").append(filterDto.getFullName()).append("'");
+                    query.append("full_name ilike '%").append(filterDto.getFullName()).append("%'");
                     isJoin = true;
                 }
 
                 if (Objects.nonNull(filterDto.getUniversityName())) {
                     if (isJoin) {
-                        query.append(" and university_name ilike '").append(filterDto.getUniversityName()).append("'");
+                        query.append(" and university_name ilike '%").append(filterDto.getUniversityName()).append("%'");
                     }
-                    query.append("university_name ilike '").append(filterDto.getUniversityName()).append("'");
+                    query.append("university_name ilike '%").append(filterDto.getUniversityName()).append("%'");
                     isJoin = true;
                 }
 
                 if (Objects.nonNull(filterDto.getEntranceYear())) {
                     if (isJoin) {
-                        query.append(" and entrance_year ilike '").append(filterDto.getEntranceYear()).append("'");
+                        query.append(" and entrance_year ilike '%").append(filterDto.getEntranceYear()).append("%'");
                     }
-                    query.append("entrance_year ilike '").append(filterDto.getEntranceYear()).append("'");
+                    query.append("entrance_year ilike '%").append(filterDto.getEntranceYear()).append("%'");
                     isJoin = true;
                 }
 
                 if (Objects.nonNull(filterDto.getGraduationYear())) {
                     if (isJoin) {
-                        query.append(" and graduation_year ilike '").append(filterDto.getGraduationYear()).append("'");
+                        query.append(" and graduation_year ilike '%").append(filterDto.getGraduationYear()).append("%'");
                     }
-                    query.append("graduation_year ilike '").append(filterDto.getGraduationYear()).append("'");
+                    query.append("graduation_year ilike '%").append(filterDto.getGraduationYear()).append("%'");
                     isJoin = true;
                 }
 
                 if (Objects.nonNull(filterDto.getFaculty())) {
                     if (isJoin) {
-                        query.append(" and faculty ilike '").append(filterDto.getFaculty()).append("'");
+                        query.append(" and faculty ilike '%").append(filterDto.getFaculty()).append("%'");
                     }
-                    query.append("faculty ilike '").append(filterDto.getFaculty()).append("'");
+                    query.append("faculty ilike '%").append(filterDto.getFaculty()).append("%'");
                     isJoin = true;
                 }
 
                 if (Objects.nonNull(filterDto.getSpeciality())) {
                     if (isJoin) {
-                        query.append(" and speciality ilike '").append(filterDto.getSpeciality()).append("'");
+                        query.append(" and speciality ilike '%").append(filterDto.getSpeciality()).append("%'");
                     }
-                    query.append("speciality ilike '").append(filterDto.getSpeciality()).append("'");
+                    query.append("speciality ilike '%").append(filterDto.getSpeciality()).append("%'");
                     isJoin = true;
                 }
 
                 if (Objects.nonNull(filterDto.getStudyType())) {
                     if (isJoin) {
-                        query.append(" and study_type ilike '").append(filterDto.getStudyType()).append("'");
+                        query.append(" and study_type ilike '%").append(filterDto.getStudyType()).append("%'");
                     }
-                    query.append("study_type ilike '").append(filterDto.getStudyType()).append("'");
+                    query.append("study_type ilike '%").append(filterDto.getStudyType()).append("%'");
                     isJoin = true;
                 }
 
 
                 if (Objects.nonNull(filterDto.getAcademicType())) {
                     if (isJoin) {
-                        query.append(" and academic_type ilike '").append(filterDto.getAcademicType()).append("'");
+                        query.append(" and academic_type ilike '%").append(filterDto.getAcademicType()).append("%'");
                     }
-                    query.append("academic_type ilike '").append(filterDto.getAcademicType()).append("'");
+                    query.append("academic_type ilike '%").append(filterDto.getAcademicType()).append("%'");
                     isJoin = true;
                 }
 
                 if (Objects.nonNull(filterDto.getDiplomaSerial())) {
                     if (isJoin) {
-                        query.append(" and diploma_serial ilike '").append(filterDto.getDiplomaSerial()).append("'");
+                        query.append(" and diploma_serial ilike '%").append(filterDto.getDiplomaSerial()).append("%'");
                     }
-                    query.append("diploma_serial ilike '").append(filterDto.getDiplomaSerial()).append("'");
+                    query.append("diploma_serial ilike '%").append(filterDto.getDiplomaSerial()).append("%'");
                     isJoin = true;
                 }
 
                 if (Objects.nonNull(filterDto.getDiplomaRegistrationNumber())) {
                     if (isJoin) {
-                        query.append(" and diploma_registration_number ilike '").append(filterDto.getDiplomaRegistrationNumber()).append("'");
+                        query.append(" and diploma_registration_number ilike '%").append(filterDto.getDiplomaRegistrationNumber()).append("%%'");
                     }
-                    query.append("diploma_registration_number ilike '").append(filterDto.getDiplomaRegistrationNumber()).append("'");
+                    query.append("diploma_registration_number ilike '%%").append(filterDto.getDiplomaRegistrationNumber()).append("%%'");
                     isJoin = true;
                 }
 
                 if (Objects.nonNull(filterDto.getGivenDate())) {
                     if (isJoin) {
-                        query.append(" and given_date ilike '").append(filterDto.getGivenDate()).append("'");
+                        query.append(" and given_date ilike '%").append(filterDto.getGivenDate()).append("%'");
                     }
-                    query.append("given_date ilike '").append(filterDto.getGivenDate()).append("'");
+                    query.append("given_date ilike '%").append(filterDto.getGivenDate()).append("%'");
                     isJoin = true;
                 }
 
                 if (Objects.nonNull(filterDto.getAcademicLevel())) {
                     if (isJoin) {
-                        query.append(" and academic_level ilike '").append(filterDto.getAcademicLevel()).append("'");
+                        query.append(" and academic_level ilike '%").append(filterDto.getAcademicLevel()).append("%'");
                     }
-                    query.append("academic_level ilike '").append(filterDto.getAcademicLevel()).append("'");
+                    query.append("academic_level ilike '%").append(filterDto.getAcademicLevel()).append("%'");
                     isJoin = true;
                 }
 
                 if (Objects.nonNull(filterDto.getAppendixNumber())) {
                     if (isJoin) {
-                        query.append(" and appendix_number ilike '").append(filterDto.getAppendixNumber()).append("'");
+                        query.append(" and appendix_number ilike '%").append(filterDto.getAppendixNumber()).append("%'");
                     }
-                    query.append("appendix_number ilike '").append(filterDto.getAppendixNumber()).append("'");
+                    query.append("appendix_number ilike '%").append(filterDto.getAppendixNumber()).append("%'");
                 }
 
                 query.append(" order by entrance_year desc limit 50");
