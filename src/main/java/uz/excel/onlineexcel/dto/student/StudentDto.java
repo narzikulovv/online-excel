@@ -9,6 +9,8 @@ import uz.excel.onlineexcel.dto.base.GenericDto;
 @ToString
 public class StudentDto extends GenericDto {
 
+    private Long id;
+
     private String fullName;
 
     private String universityName;

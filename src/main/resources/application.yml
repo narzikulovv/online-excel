@@ -3,7 +3,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/online_excel
     username: postgres
-    password: iPhone0303
+    password: root123
   jpa:
     show-sql: true
     hibernate:
